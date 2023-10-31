@@ -25,7 +25,7 @@ var config = {
     modules: [
         {
             module: 'MMM-Nordpool',
-			header: 'Nordpool',
+            header: 'Nordpool',
             config: {
                 // See below for configurable options
             }
@@ -51,21 +51,21 @@ var config = {
     modules: [
         {
             module: 'MMM-Nordpool',
-			header: 'Nordpool',
+            header: 'Nordpool',
             config: {
                 area: "LV",
-				currency: "EUR",
-				updateNordpoolHour: 1,
-				maxRandomUpdateMinute: 15
-				chartConfig: {
-					backgroundColor: "rgba(255,255,255,0.1)",
-					borderColor: "rgba(255,255,255,0.7)",
-					fill: true,
-					lineTension: 0.5,
-					pointBorderColor: "black",
-					pointColor: "white",
-					currentPointColor: "red",
-				}
+                currency: "EUR",
+                updateNordpoolHour: 1,
+                maxRandomUpdateMinute: 15,
+                chartConfig: {
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    borderColor: "rgba(255,255,255,0.7)",
+                    fill: true,
+                    lineTension: 0.5,
+                    pointBorderColor: "black",
+                    pointColor: "white",
+                    currentPointColor: "red",
+                }
             }
         }
     ]
