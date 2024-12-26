@@ -17,6 +17,9 @@
   },
   "dependencies": {
     "dayjs": "^1.11.10",
-    "nordpool": "^5.1.0"
+    "nordpool": "file:libs/nordpool-node"
+  },
+  "scripts": {
+    "preinstall": "(mkdir libs || (rm -rf libs && mkdir libs)) && cd libs && git clone https://github.com/samuelmr/nordpool-node.git && cd nordpool-node && git checkout f9e3a34fc4c00e16995868cdf1f6871fbbae80a7 && npm run build"
   }
 }
