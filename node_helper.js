@@ -1,5 +1,5 @@
 var NodeHelper = require("node_helper");
-const {Prices} = require("nordpool");
+const {nordpool} = require("@offrain/nordpool");
 
 module.exports = NodeHelper.create({
 
@@ -20,13 +20,12 @@ module.exports = NodeHelper.create({
 		const prettyResults = {prices: [], hours: [], avgPrice: 0};
 		let pricesSum = 0;
 
-		const prices = new Prices();
-		const results = await prices.hourly(opts);
+		const results = await nordpool.hourly(opts);
 
 		for (const item of results) {
 			const date = new Date(item.date)
 			const hour = date.getHours().toString().padStart(2, '0').concat(':00')
-			const price = Math.round(item.value * 100) / 1000
+			const price = Math.round(item.marketPrice * 100) / 1000
 
 			console.log(`${hour}\t${price.toFixed(3)} ${currency}/kWh`)
 
