@@ -5,16 +5,17 @@ module.exports = NodeHelper.create({
 
 	socketNotificationReceived: async function(notification, payload) {
 		if (notification === "MMM-Nordpool-get-data") {
-			const results = await this.getHourlyConsumerPrices(payload.area, payload.currency);
+			const results = await this.getHourlyConsumerPrices(payload.area, payload.currency, payload.date);
 			this.sendSocketNotification("MMM-Nordpool-get-data", results);
 		}
 	},
 
-	getHourlyConsumerPrices: async function (area, currency) {
+	getHourlyConsumerPrices: async function (area, currency, date) {
 
 		const opts = {
 			area: area.toUpperCase(),
 			currency: currency.toUpperCase(),
+			date: date,
 		};
 
 		const prettyResults = {prices: [], hours: [], avgPrice: 0};
