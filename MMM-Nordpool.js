@@ -26,7 +26,14 @@ Module.register("MMM-Nordpool", {
 	},
 
 	getData: function() {
-		this.sendSocketNotification("MMM-Nordpool-get-data", this.config);
+		this.sendSocketNotification(
+			"MMM-Nordpool-get-data",
+			{
+				area: this.config.area,
+				currency: this.config.currency,
+				date: (new Date()).toISOString(),
+			}
+		);
 		this.scheduleNordpoolUpdate();
 	},
 
