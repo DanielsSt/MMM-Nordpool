@@ -14,6 +14,7 @@ Module.register("MMM-Nordpool", {
 			pointColor: "white",
 			currentPointColor: "red",
 		},
+		useHourlyAverage: false,
 	},
 	chartCanvasId: "nordpool_chart_canvas",
 	chartRedrawTimeoutId: null,
@@ -32,6 +33,7 @@ Module.register("MMM-Nordpool", {
 				area: this.config.area,
 				currency: this.config.currency,
 				date: (new Date()).toISOString(),
+				useHourlyAverage: this.config.useHourlyAverage,
 			}
 		);
 		this.scheduleNordpoolUpdate();
@@ -49,7 +51,7 @@ Module.register("MMM-Nordpool", {
 			now.getMonth(),
 			now.getDate()+1,
 			this.config.updateNordpoolHour,
-			Math.floor(Math.random() * this.config.maxRandomUpdateMinute),
+			Math.floor(Math.random() * this.config.maxRandomUpdateMinute)
 		);
 		const msTillNext = (tomorrow - now) + 1000; // lets do it 1s after midnight
 		let self = this;
@@ -64,8 +66,15 @@ Module.register("MMM-Nordpool", {
 		}
 
 		const now = new Date();
-		const nextHour = new Date(now.getFullYear(),now.getMonth(),now.getDate(), now.getHours() + 1);
-		const msTillNext = (nextHour - now) + 1000; // lets do it 1s after new hour
+		const nextQuarter = now.getMinutes() >= 45 ? 60
+			: now.getMinutes() >= 30 ? 45
+				: now.getMinutes() >= 15 ? 30
+					: now.getMinutes() >= 0 ? 15 : 0
+
+		const nextTick = this.config.useHourlyAverage ?
+			new Date(now.getFullYear(),now.getMonth(),now.getDate(), now.getHours() + 1)
+			: new Date(now.getFullYear(),now.getMonth(),now.getDate(), now.getHours(), nextQuarter);
+		const msTillNext = (nextTick - now) + 1000; // lets do it 1s after new hour
 		let self = this;
 		this.chartRedrawTimeoutId = setTimeout(function() {
 			self.updateChart();
@@ -118,7 +127,12 @@ Module.register("MMM-Nordpool", {
 		const config = this.config.chartConfig;
 
 		const module = this;
-		const currentHour = (new Date()).getHours().toString().padStart(2, "0").concat(":00");
+		const now = new Date();
+		const currentHour = now.getHours().toString().padStart(2, "0");
+		const currentQuarter = this.config.useHourlyAverage ? 0
+			: now.getMinutes() >= 45 ? 45
+				: now.getMinutes() >= 30 ? 30
+					: now.getMinutes() >= 15 ? 15 : 0
 
 		const dataset = {
 			label: this.config.currency + "/MWh",
@@ -127,7 +141,7 @@ Module.register("MMM-Nordpool", {
 				const index = context.dataIndex;
 				const itemHour = module.dataResponse.hours[index];
 
-				if (currentHour === itemHour) {
+				if (currentHour.concat(":", currentQuarter.toString().padStart(2, "0")) === itemHour) {
 					return config.currentPointColor;
 				} else {
 					return config.pointColor;
